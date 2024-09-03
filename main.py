@@ -1,0 +1,118 @@
+import tkinter as tk
+
+CURRENCIES = {
+        'GE':
+        {
+            'unit': 1,
+            'USD': 0.37,
+            'LIRA': 12.64,
+            'RUBL': 32.66,
+        },
+        'USD':
+        {
+            'unit': 1,
+            'GE': 2.69,
+            'LIRA': 34,
+            'RUBL': 87.87,
+        },
+        'RUBL':
+        {
+            'unit': 1,
+            'GE': 0.031,
+            'LIRA': 0.39,
+            'USD': 0.011,
+        },
+        'LIRA':
+        {
+            'unit': 1,
+            'GE': 0.079,
+            'USD': 0.029,
+            'RUBL': 2.58,
+        },
+    }
+
+def main():
+    root = tk.Tk()
+    window_width = 800
+    window_height = 500
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x_offset = (screen_width // 2) - (window_width // 2)
+    y_offset = (screen_height // 2) - (window_height // 2)
+    root.geometry(f'{window_width}x{window_height}+{x_offset}+{y_offset}')
+    root.title('Currency Converter')
+    root.resizable(width=False, height=False)
+
+    
+    currencies_list = [*CURRENCIES.keys()]
+
+    # currencies frame
+    currency_frame = tk.Frame(root, bd=1, relief=tk.SUNKEN)
+    currency_frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
+
+    base_curr_label = tk.Label(currency_frame, text='From', font=('Arial', 14)) 
+    base_curr_label.grid(row=0, column=0, sticky='W', padx=10, pady=10)
+
+    base_curr = tk.StringVar(currency_frame)
+    base_curr.set(currencies_list[0])
+    base_curr_menu = tk.OptionMenu(currency_frame, base_curr, *currencies_list)
+    base_curr_menu.grid(row=0, column=1, sticky='ew', padx=10, pady=10)
+
+    conversion_curr_label = tk.Label(currency_frame, text='To', font=('Arial', 14))
+    conversion_curr_label.grid(row=1, column=0, sticky='W', padx=10, pady=10)
+
+    conversion_curr = tk.StringVar(currency_frame)
+    conversion_curr.set(currencies_list[1])
+    conversion_curr_menu = tk.OptionMenu(currency_frame, conversion_curr, *currencies_list)
+    conversion_curr_menu.grid(row=1, column=1, sticky='ew', padx=10, pady=10)
+
+    first_num = round(float(CURRENCIES[base_curr.get()]['unit']), 2)
+    second_num = round(float(CURRENCIES[base_curr.get()][conversion_curr.get()]), 2)
+
+    conversion_rate_label = tk.Label(currency_frame, text=f'Rate : {convert(first_num, second_num)}', font=('Arial', 14))
+    conversion_rate_label.grid(row=2, column=0, sticky='W', padx=10, pady=10)
+    
+
+    # actions frame
+    action_frame = tk.Frame(root, bd=1, relief=tk.SUNKEN)
+    action_frame.grid(row=1, column=0, sticky='nsew', padx=10, pady=10)
+
+    # amount for conversion
+    amount_frame = tk.Frame(action_frame, relief=tk.SUNKEN)
+    amount_frame.grid(row=0, column=0, sticky='ew', padx=10, pady=10)
+    amount_label = tk.Label(amount_frame, text='Amount:', font=('Arial', 14))
+    amount_label.pack(side='left', padx=10, pady=10)
+    amount_field = tk.Entry(amount_frame, bg='lavender', highlightthickness=0)
+    amount_field.pack(side='left', padx=10, pady=10)
+
+    # action buttons
+    btn_frame = tk.Frame(action_frame, relief=tk.SUNKEN)
+    btn_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
+
+    btn_convert = tk.Button(btn_frame, text='Convert')
+    btn_convert.pack(side='left', padx=10, pady=10)
+    btn_clear = tk.Button(btn_frame, text='Clear')
+    btn_clear.pack(side='left', padx=10, pady=10)
+
+    # result frame
+    result_frame = tk.Frame(root, bd=1, relief=tk.SUNKEN)
+    result_frame.grid(row=2, column=0, sticky='nsew', padx=10, pady=10)
+
+    result_label = tk.Label(result_frame, text='Result:', font=('Arial', 14))
+    result_label.pack(side='left', padx=10, pady=10)
+
+    root.grid_rowconfigure(0, weight=1)
+    root.grid_rowconfigure(1, weight=1)
+    root.grid_rowconfigure(2, weight=1)
+    root.grid_columnconfigure(0, weight=1)
+
+    root.mainloop()
+
+
+# convert from one currency to another
+
+def convert(first, second):
+    return first * second
+
+if __name__ == '__main__':
+    main()
