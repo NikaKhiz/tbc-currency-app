@@ -31,9 +31,11 @@ CURRENCIES = {
         },
     }
 
+currencies_list = [*CURRENCIES.keys()]
+
 def main():
 
-    global conversion_rate_label, base_curr, conversion_curr
+    global conversion_rate_label, base_curr, conversion_curr, result_label, amount_field
 
     root = tk.Tk()
     window_width = 800
@@ -47,8 +49,6 @@ def main():
     root.resizable(width=False, height=False)
 
     
-    currencies_list = [*CURRENCIES.keys()]
-
     # currencies frame
     currency_frame = tk.Frame(root, bd=1, relief=tk.SUNKEN)
     currency_frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
@@ -94,14 +94,14 @@ def main():
 
     btn_convert = tk.Button(btn_frame, text='Convert')
     btn_convert.pack(side='left', padx=10, pady=10)
-    btn_clear = tk.Button(btn_frame, text='Clear')
+    btn_clear = tk.Button(btn_frame, text='Clear', command=on_click_clear)
     btn_clear.pack(side='left', padx=10, pady=10)
 
     # result frame
     result_frame = tk.Frame(root, bd=1, relief=tk.SUNKEN)
     result_frame.grid(row=2, column=0, sticky='nsew', padx=10, pady=10)
 
-    result_label = tk.Label(result_frame, text='Result:', font=('Arial', 14))
+    result_label = tk.Label(result_frame, text='Result : ', font=('Arial', 14))
     result_label.pack(side='left', padx=10, pady=10)
 
     root.grid_rowconfigure(0, weight=1)
@@ -131,6 +131,20 @@ def on_curr_change(event):
             second_num = first_num
         conversion_rate = convert(first_num, second_num)
         conversion_rate_label.config(text=f'Rate : {conversion_rate}')
+
+
+# on button click return all of widget values to its initial states
+
+def on_click_clear():
+    base_currency = currencies_list[0]
+    conversion_currency = currencies_list[1]
+    first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
+    second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
+    base_curr.set(base_currency)
+    conversion_curr.set(conversion_currency)
+    amount_field.delete(0, tk.END)
+    conversion_rate_label.config(text=f'Rate : {convert(first_num, second_num)}')
+    result_label.config(text=f'Result : ')
 
 
 if __name__ == '__main__':
