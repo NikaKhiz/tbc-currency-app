@@ -32,6 +32,9 @@ CURRENCIES = {
     }
 
 def main():
+
+    global conversion_rate_label, base_curr, conversion_curr
+
     root = tk.Tk()
     window_width = 800
     window_height = 500
@@ -55,7 +58,7 @@ def main():
 
     base_curr = tk.StringVar(currency_frame)
     base_curr.set(currencies_list[0])
-    base_curr_menu = tk.OptionMenu(currency_frame, base_curr, *currencies_list)
+    base_curr_menu = tk.OptionMenu(currency_frame, base_curr, *currencies_list, command=on_curr_change)
     base_curr_menu.grid(row=0, column=1, sticky='ew', padx=10, pady=10)
 
     conversion_curr_label = tk.Label(currency_frame, text='To', font=('Arial', 14))
@@ -63,7 +66,7 @@ def main():
 
     conversion_curr = tk.StringVar(currency_frame)
     conversion_curr.set(currencies_list[1])
-    conversion_curr_menu = tk.OptionMenu(currency_frame, conversion_curr, *currencies_list)
+    conversion_curr_menu = tk.OptionMenu(currency_frame, conversion_curr, *currencies_list, command=on_curr_change)
     conversion_curr_menu.grid(row=1, column=1, sticky='ew', padx=10, pady=10)
 
     first_num = round(float(CURRENCIES[base_curr.get()]['unit']), 2)
@@ -113,6 +116,22 @@ def main():
 
 def convert(first, second):
     return first * second
+
+
+# recalculate exchange rate according to the selected currencies
+
+def on_curr_change(event):
+    base_currency = base_curr.get()
+    conversion_currency = conversion_curr.get()
+    if base_currency and conversion_currency:
+        first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
+        if base_currency != conversion_currency:
+            second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
+        else:
+            second_num = first_num
+        conversion_rate = convert(first_num, second_num)
+        conversion_rate_label.config(text=f'Rate : {conversion_rate}')
+
 
 if __name__ == '__main__':
     main()
