@@ -111,7 +111,7 @@ def main():
     result_frame.grid(row=2, column=0, sticky='nswe', padx=10, pady=10)
     result_frame.grid_rowconfigure(0, weight=1)
 
-    result_label = tk.Label(result_frame, text='Result:', font=('Arial', 14))
+    result_label = tk.Label(result_frame, text='', font=('Arial', 14))
     result_label.pack(side='top', pady=5)
 
 
@@ -166,7 +166,7 @@ def on_click_clear():
     conversion_curr.set(conversion_currency)
     amount_field.delete(0, tk.END)
     conversion_rate_label.config(text=f'Rate : {convert(base_currency, conversion_currency)}')
-    result_label.config(text=f'Result : ')
+    result_label.config(text=f'')
 
 
 # on button click convert given amount of base currency in to another and display the result
@@ -185,7 +185,7 @@ def on_click_convert():
         converted_amount = amount * conversion_rate
         result_label.config(text=f'Result : {int(amount)} {base_currency} is {converted_amount:.2f} {conversion_currency}')
     except ValueError:
-        result_label.config(text='Result : Invalid amount. Please provide valid integer as amount!')
+        result_label.config(text='Provide valid integer as amount.')
 
 
 if __name__ == '__main__':
