@@ -92,7 +92,7 @@ def main():
     btn_frame = tk.Frame(action_frame, relief=tk.SUNKEN)
     btn_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
 
-    btn_convert = tk.Button(btn_frame, text='Convert')
+    btn_convert = tk.Button(btn_frame, text='Convert', command=on_click_convert)
     btn_convert.pack(side='left', padx=10, pady=10)
     btn_clear = tk.Button(btn_frame, text='Clear', command=on_click_clear)
     btn_clear.pack(side='left', padx=10, pady=10)
@@ -145,6 +145,27 @@ def on_click_clear():
     amount_field.delete(0, tk.END)
     conversion_rate_label.config(text=f'Rate : {convert(first_num, second_num)}')
     result_label.config(text=f'Result : ')
+
+
+# on button click convert given amount of base currency in to another and display the result
+
+def on_click_convert():
+    try:
+        amount = amount_field.get()
+        if not amount:
+            result_label.config(text='Result : Please enter an amount')
+            return
+
+        amount = float(amount)
+        base_currency = base_curr.get()
+        conversion_currency = conversion_curr.get()
+        first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
+        second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
+        conversion_rate = convert(first_num, second_num)
+        converted_amount = amount * conversion_rate
+        result_label.config(text=f'Result : {int(amount)} {base_currency} is {converted_amount:.2f} {conversion_currency}')
+    except ValueError:
+        result_label.config(text='Result : Invalid amount. Please provide valid integer as amount!')
 
 
 if __name__ == '__main__':
