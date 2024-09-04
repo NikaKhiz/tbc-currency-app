@@ -1,29 +1,25 @@
 import tkinter as tk
 
 CURRENCIES = {
-        'GE':
-        {
+        'GE': {
             'unit': 1,
             'USD': 0.37,
             'LIRA': 12.64,
-            'RUBL': 32.66,
-        },
-        'USD':
-        {
+            'RUBL': 32.66
+            },
+        'USD': {
             'unit': 1,
             'GE': 2.69,
             'LIRA': 34,
-            'RUBL': 87.87,
-        },
-        'RUBL':
-        {
+            'RUBL': 87.87
+            },
+        'RUBL': {
             'unit': 1,
             'GE': 0.031,
             'LIRA': 0.39,
-            'USD': 0.011,
-        },
-        'LIRA':
-        {
+            'USD': 0.011
+            },
+        'LIRA': {
             'unit': 1,
             'GE': 0.079,
             'USD': 0.029,
@@ -69,10 +65,7 @@ def main():
     conversion_curr_menu = tk.OptionMenu(currency_frame, conversion_curr, *currencies_list, command=on_curr_change)
     conversion_curr_menu.grid(row=1, column=1, sticky='ew', padx=10, pady=10)
 
-    first_num = round(float(CURRENCIES[base_curr.get()]['unit']), 2)
-    second_num = round(float(CURRENCIES[base_curr.get()][conversion_curr.get()]), 2)
-
-    conversion_rate_label = tk.Label(currency_frame, text=f'Rate : {convert(first_num, second_num)}', font=('Arial', 14))
+    conversion_rate_label = tk.Label(currency_frame, text=f'Rate : {convert(base_curr.get(), conversion_curr.get())}', font=('Arial', 14))
     conversion_rate_label.grid(row=2, column=0, sticky='W', padx=10, pady=10)
     
 
@@ -114,8 +107,14 @@ def main():
 
 # convert from one currency to another
 
-def convert(first, second):
-    return first * second
+def convert(curr_1, curr_2):
+    curr_1_value = round(float(CURRENCIES[curr_1]['unit']), 2)
+    if curr_1 != curr_2:
+        curr_2_value = round(float(CURRENCIES[curr_1][curr_2]), 2)
+    else:
+        curr_2_value = curr_1_value
+
+    return curr_1_value * curr_2_value
 
 
 # recalculate exchange rate according to the selected currencies
@@ -123,14 +122,8 @@ def convert(first, second):
 def on_curr_change(event):
     base_currency = base_curr.get()
     conversion_currency = conversion_curr.get()
-    if base_currency and conversion_currency:
-        first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
-        if base_currency != conversion_currency:
-            second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
-        else:
-            second_num = first_num
-        conversion_rate = convert(first_num, second_num)
-        conversion_rate_label.config(text=f'Rate : {conversion_rate}')
+    conversion_rate = convert(base_currency, conversion_currency)
+    conversion_rate_label.config(text=f'Rate : {conversion_rate}')
 
 
 # on button click return all of widget values to its initial states
@@ -138,12 +131,10 @@ def on_curr_change(event):
 def on_click_clear():
     base_currency = currencies_list[0]
     conversion_currency = currencies_list[1]
-    first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
-    second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
     base_curr.set(base_currency)
     conversion_curr.set(conversion_currency)
     amount_field.delete(0, tk.END)
-    conversion_rate_label.config(text=f'Rate : {convert(first_num, second_num)}')
+    conversion_rate_label.config(text=f'Rate : {convert(base_currency, conversion_currency)}')
     result_label.config(text=f'Result : ')
 
 
@@ -159,9 +150,7 @@ def on_click_convert():
         amount = float(amount)
         base_currency = base_curr.get()
         conversion_currency = conversion_curr.get()
-        first_num = round(float(CURRENCIES[base_currency]['unit']), 2)
-        second_num = round(float(CURRENCIES[base_currency][conversion_currency]), 2)
-        conversion_rate = convert(first_num, second_num)
+        conversion_rate = convert(base_currency, conversion_currency)
         converted_amount = amount * conversion_rate
         result_label.config(text=f'Result : {int(amount)} {base_currency} is {converted_amount:.2f} {conversion_currency}')
     except ValueError:
