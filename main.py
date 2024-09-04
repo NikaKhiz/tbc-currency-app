@@ -24,7 +24,7 @@ CURRENCIES = {
             'GE': 0.079,
             'USD': 0.029,
             'RUBL': 2.58,
-        },
+            },
     }
 
 currencies_list = [*CURRENCIES.keys()]
